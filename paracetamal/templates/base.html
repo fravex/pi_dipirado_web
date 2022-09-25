@@ -5,71 +5,136 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>{% block title %} {{ section.title }} {% endblock %}</title>
 </head>
 
-<body onload="openModal('dv-modal')" class="">
-    <header>
-        <nav>
-            <div class="container_nav">
-                <div>
-                    <a href="{% url 'index' %}"><img src="{% static 'img/logo.svg' %}" alt="Logo da Aplicação Paracetamal"></a>
-                </div>
-                <div>
-                    <div>
+<body onload="openModal('dv-modal')" class="pagina">
 
-                        <span id="btn_abrir">menu</span>
-                        <span id="btn_fechar">close</span>
-                    </div>
-                </div>
-            </div>
-            <ul class="lista_menu">
-                <li><a href="{% url 'consulta_interacoes' %}">Consulta Interações Medicamentosas</a> </li>
-                <li><a href="">Riscos - Interação Medicamentosa</a> </li>
-                <li><a href="{% url 'integrantes_grupo' %}">Grupo - Projeto Integrador</a></li>
-                <li><a class="anvisa" href="https://www.gov.br/anvisa/pt-br" title="Você será redirecionado para a página da ANVISA">Anvisa<img class="bandeira" src="{% static 'img/brasil.svg' %}" alt="Bandeira Brasil"></a></li>
-                <li><a class="kegg" href="https://www.kegg.jp/" title="Você será redirecionado para a página do KeggDrug">Kegg<img class="bandeira"  src="{% static 'img/japao.svg' %}" alt="Bandeira Japão"></a></li>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <img src="{% static 'img/logo.png' %}" class="d-inline-block align-top" alt="Logo da Aplicação Paracetamal">
+              </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <a class="nav-link text-primary" href="{% url 'consulta_interacoes' %}"><span></span> <i class="fa-sharp fa-solid fa-prescription-bottle-medical"></i> Consulta Interações Medicamentosas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="{% url 'integrantes_grupo' %}"><i class="fa-sharp fa-solid fa-user-group"></i> Grupo - Projeto Integrador</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle  text-primary" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-sharp fa-solid fa-database"></i> Fontes Base de Dados
+                  </a>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item text-primary" href="https://www.gov.br/anvisa/pt-br" title="Você será redirecionado para a página da ANVISA">Anvisa <img class="bandeira" src="{% static 'img/logo_anvisa.png' %}" alt="Bandeira Brasil"></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-primary" href="https://www.kegg.jp/" title="Você será redirecionado para a página do KeggDrug">Kegg <img class="bandeira"  src="{% static 'img/logo_kegg.gif' %}" alt="Bandeira Japão"></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-primary" href="https://go.drugbank.com/" title="Você será redirecionado para a página do DrugBank">DrugBank <img class="bandeira"  src="{% static 'img/logo_drugbank.svg' %}" alt="Logo DrugBank"></a>
+                  </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="{% url 'analise_de_dados' %}"><i class="fa-sharp fa-solid fa-chart-simple"></i> Análise de Dados</a>
+                </li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'logout_view' %}"> Sair</a></li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="{% url 'logout_view' %}">Sair</a>
+                </li>
                 {% endif %}
-            </ul>
-        </nav>
+              </ul>
+            </div>
+          </nav>
     </header>
 
-    
-
-
-    <div  >
-        <div class="container_acessibilidade" >
-            <p>Tamanho da fonte</p>
+    <!-- MENSAGEM DE INTERACAO COMPONENTES -->
+    {% if resultado_interacao == '1' %}
+    <div class="container" id="mensagem_alerta">
+        <div class="card" id="alerta_interacao">
+            <div class="card-header bg-danger">
+                <h5 class="card-title text-center text-white">
+                    <i class="fa-sharp fa-solid fa-triangle-exclamation mr-2"></i></h5>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Existe Interação entre os componentes:</h5>
+            <p class="card-text text-justify">{{ componente_1 }} + {{ componente_2}}</p>
+            <button class="btn btn-primary" id="btn_fechar_alerta">Fechar</button>
+            </div>
         </div>
-        <!-- Botões de Acessibilidade -->
-        <div class="container_acessibilidade_fonte">
-            <button class="btn_acessibilidade_fonte" onClick="fonte('aumentar');"title="Aumentar">A+</button> <!-- Botão + -->
-            <button class="btn_acessibilidade_fonte" onClick="fonte('normal');" title="Normal">A</button> <!-- Botão - -->
-            <button class="btn_acessibilidade_fonte" onClick="fonte('diminuir');"title="Diminuir">A-</button> <!-- Botão - -->
-        </div>
-
     </div>
+    {% endif %}
 
+    {% if resultado_interacao == '0' %}
+    <div class="container" id="mensagem_alerta">
+        <div class="card" id="alerta_interacao">
+            <div class="card-header bg-success">
+                <h5 class="card-title text-center text-white">
+                    <i class="fa-sharp fa-solid fa-thumbs-up"></i></h5>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Não existe Interação entre os componentes:</h5>
+            <p class="card-text text-justify">{{ componente_1 }} + {{ componente_2}}</p>
+            <button class="btn btn-primary" id="btn_fechar_alerta">Fechar</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if resultado_interacao == '-1' %}
+    <div class="container" id="mensagem_alerta">
+        <div class="card" id="alerta_interacao">
+            <div class="card-header bg-primary">
+                <h5 class="card-title text-center text-white">
+                    <i class="fa-sharp fa-solid fa-question"></i></h5>
+            </div>
+            <div class="card-body">
+            <h5 class="card-title">Não foi possível verificar a interação entre os componentes <br>  Favor tentar novamente.</h5>
+            <p class="card-text text-justify">{{ componente_1 }} + {{ componente_2}}</p>
+            <button class="btn btn-primary " id="btn_fechar_alerta">Fechar</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <!--  FIM - MENSAGEM DE INTERACAO COMPONENTES -->
+
+
+
+
+    <main class="container">
+
+    <!-- Botões de Acessibilidade -->
+    <div class="text-right mt-3">
+        <div>
+            <span>Tamanho da fonte</span>
+        </div>
+        <div>
+            <button class="btn btn-primary" onClick="fonte('aumentar');"title="Aumentar"><i class="fa-sharp fa-solid fa-plus"></i></button> <!-- Botão + -->
+            <button class="btn btn-primary" onClick="fonte('normal');" title="Normal"><i class="fa-sharp fa-solid fa-arrow-rotate-left"></i></i></button> <!-- Botão - -->
+            <button class="btn btn-primary" onClick="fonte('diminuir');"title="Diminuir"><i class="fa-sharp fa-solid fa-minus"></i></button> <!-- Botão - -->
+        </div>
+    </div>
+    
     {% block content %}
 
     {% endblock%}
+    </main>
 
-
-    <footer>
-        <div class="footer_info">
-            <p>Projeto Integrador realizado<br>pelos alunos da Univesp<br>1º Semestre 2022</p>
-            <img src="{% static 'img/logo.svg' %}" alt="Logo da Aplicação Paracetamal">
-        </div>
+    <!-- <footer class="text-center mt-5 rodape">
         <div>
-           <p class="footer_info_2">Aplicativo de uso experimental</p> 
+            <p>Projeto Integrador realizado pelos alunos da Univesp</p>
+            <p>2º Semestre 2022</p>
+            <p>Aplicativo de uso experimental</p> 
         </div>
-    </footer>
+    </footer> -->
 
     <!-- script - controla o menu e os alerta de integracao -->
     <script src="{% static 'js/menu_alerta.js' %}"></script>
@@ -82,6 +147,9 @@
     <script src="{% static 'js/modal.js' %}"></script>
     <!-- Biblioteca JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- script bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
 
 </body>
 

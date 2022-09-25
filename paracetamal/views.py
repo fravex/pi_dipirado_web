@@ -1,5 +1,4 @@
 from django.shortcuts import redirect, render
-
 from . models import BigtableNomes
 from django.http import  JsonResponse
 from django.contrib.auth import authenticate, login, logout
@@ -79,5 +78,5 @@ def logout_view(request):
 def integrantes_grupo(request):
     return render(request, 'paracetamal/integrantes_grupo.html')
 
-
-    
+def analise_de_dados(request):
+    return render(request, 'paracetamal/analise_de_dados.html')
